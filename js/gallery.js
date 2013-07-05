@@ -8,7 +8,7 @@ function registerRatios(e) {
 }
 
 function fitImage(e) {
-	var img = $(e.currentTarget).is("img") ? $(e.target) : $("article.selected").find("div:first-child img");
+	var img = $(e.currentTarget).is("img, video") ? $(e.target) : $("article.selected").find("div:first-child img, div:first-child video");
 	var article = img.parents('article');
 	if (article.hasClass('selected')) {
 		//alert(img[0].src);
@@ -31,7 +31,7 @@ function fitImage(e) {
 
 function growImage(article) {
 	//alert(ratios.length);
-	var img = article.find("div:first-child img");
+	var img = article.find("div:first-child img, div:first-child video");
 	var div = article.children("div:first-child");
 	var ratio = ratios[$("#artwork article").index(article)];
 	div.addClass('expando');
@@ -54,7 +54,7 @@ function growImage(article) {
 //Don't want resize transition if it's a simple window resize. Also fades in descriptions.
 function stripTransition(event) {
 	//alert(event.target);
-	var img = $(event.target).is('img') ? $(event.target) : $(event.target).children('img');
+	var img = $(event.target).is('img, video') ? $(event.target) : $(event.target).children('img, video');
 	var article = img.parents('article');
 	if (article.hasClass("selected")) {
 		$(document).unbind("webkitTransitionEnd transitionend oTransitionEnd MSTransitionEnd", stripTransition);
@@ -87,7 +87,7 @@ function liquify(e) {
 	article.each(function (index) {
 		art = $(this);
 		div = art.children("div:first-child");
-		img = div.children("img");
+		img = div.children("img, video");
 		ratio = ratios[$("#artwork article").index($(this))];
 		if (ratio >= 1) {
 			img.width(art.width()).height(art.width()/ratio);
@@ -106,7 +106,8 @@ function liquify(e) {
 }
 
 function toggle(e) {
-	if (!$(e.target).is("a") && !$(e.target).parent().is("h2")) {
+	//alert(e.target);
+	if (!$(e.target).is("a, video") && !$(e.target).parent().is("h2")) {
     	var clicked = $(e.target).is("article") ? $(e.target) : $(e.target).parents("article");
     	var open = $("article.selected");
     	if (open.length > 0) {
@@ -190,6 +191,7 @@ $(function() {
 		cntx.stroke();
 	});
 	$("article div:first-child img").load(registerRatios);
+	$("article div:first-child video").bind("loadedmetadata", registerRatios);
 	var popup = $(document.createElement('div'));
 	popup.html('<div><canvas></canvas></div>');//'<div><canvas></canvas><a href="#">close</a></div>');
 	popup.attr("id", "popup");
