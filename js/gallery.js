@@ -7,6 +7,12 @@ function registerRatios(e) {
 	fitImage(e);
 }
 
+function replaceWithImage(e) {
+    var img = $(e.target).next();
+    img.load(registerRatios);
+    $(e.target).parent().replaceWith(img);
+}
+
 function fitImage(e) {
 	var img = $(e.currentTarget).is("img, video") ? $(e.target) : $("article.selected").find("div:first-child img, div:first-child video");
 	var article = img.parents('article');
@@ -194,6 +200,7 @@ $(function() {
 	});
 	$("article div:first-child img").load(registerRatios);
 	$("article div:first-child video").bind("loadedmetadata", registerRatios);
+	$("video source:last-of-type").bind('error', replaceWithImage);
 	var popup = $(document.createElement('div'));
 	popup.html('<div><canvas></canvas></div>');//'<div><canvas></canvas><a href="#">close</a></div>');
 	popup.attr("id", "popup");
