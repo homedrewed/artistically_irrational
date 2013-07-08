@@ -106,9 +106,11 @@ function liquify(e) {
 }
 
 function toggle(e) {
-	//alert(e.target);
-	if (!$(e.target).is("a, video") && !$(e.target).parent().is("h2")) {
-    	var clicked = $(e.target).is("article") ? $(e.target) : $(e.target).parents("article");
+	var target = $(e.target);
+	//Don't want toggle to trigger if bottom 30 pixels of video is clicked (controls area)
+	if (target.is("video") && e.layerY > (target.height()-30)) return;
+	if (!target.is("a") && !target.parent().is("h2")) {
+    	var clicked = target.is("article") ? target : target.parents("article");
     	var open = $("article.selected");
     	if (open.length > 0) {
     		fitImage(e);
